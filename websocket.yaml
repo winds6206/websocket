@@ -1,58 +1,54 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: onion-play
+  name: websocket
   labels:
-    app: play
-    repo: onion
-    version: in
+    app: websocket
+    repo: websocket
+    product: test
 spec:
   type: ClusterIP
   ports:
-    - protocol: TCP
-      name: http
+    - name: http
       port: 80
+      protocol: TCP
+      targetPort: 8899
   selector:
-    app: play
-    repo: onion
-    version: in
+    app: websocket
+    repo: websocket
+    product: test
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: onion-play
+  name: websocket
+  namespace: default
   labels:
-    app: play
-    repo: onion
-    version: in
+    app: websocket
+    repo: websocket
+    product: test
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: play
-      repo: onion
-      version: in
+      app: websocket
+      repo: websocket
+      product: test
   strategy:
+    type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1
+      maxSurge: 2
       maxUnavailable: 1
-  minReadySeconds: 10
-  revisionHistoryLimit: 1
   template:
     metadata:
       labels:
-        app: play
-        repo: onion
-        version: in
+        app: websocket
+        repo: websocket
+        product: test
     spec:
       restartPolicy: Always
       containers:
-        - name: onion-play
-          image: gcr.io/gcp-20200218-001/onion-qatest:latest
-          env:
-            - name: PROJECT_ENV
-              value: gcp-qatest
-            - name: PROJECT_SITE
-              value: play
-            - name: TZ
-              value: Asia/Taipei
+      - name: websocket
+        image: registry.tonyjhang.tk:5000/tony_jhang/websocket-master:latest
+        imagePullPolicy: Always
+        command: ["./server"]
