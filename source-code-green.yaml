@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocket
+  namespace: default
+  labels:
+    app: websocket
+    repo: websocket
+    product: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: websocket
+      repo: websocket
+      product: test
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: websocket
+        repo: websocket
+        product: test
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: websocket
+        image: registry.tonyjhang.tk:5000/tony_jhang/websocket-master:latest
+        imagePullPolicy: Always
+        command:
+          - ./server.go
