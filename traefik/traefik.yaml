@@ -1,0 +1,86 @@
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: internal-ingress
+#  namespace: default
+#  annotations:
+#    cloud.google.com/load-balancer-type: internal
+#spec:
+#  type: LoadBalancer
+#  loadBalancerIP: ""
+#  loadBalancerSourceRanges:
+#  - 10.0.0.0/8
+#  ports:
+#  - name: https
+#    port: 443
+#    protocol: TCP
+#    targetPort: 443
+#  selector:
+#    app: internal-ingress
+#    repo: none
+#    product: xbb-platform
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: internal-ingress
+  namespace: default
+  labels:
+    app: internal-ingress
+    repo: none
+    product: xbb-platform
+  annotations:
+    configmap.reloader.stakater.com/reload: "traefik-configmap"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: internal-ingress
+      repo: none
+      product: xbb-platform
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: internal-ingress
+        repo: none
+        product: xbb-platform
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: internal-ingress
+          image: traefik:v2.4
+          imagePullPolicy: Always
+          args:
+            - --accesslog.fields.names.StartUTC=drop
+          env:
+            - name: TZ
+              value: Asia/Taipei
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+            initialDelaySeconds: 2
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+            initialDelaySeconds: 2
+            timeoutSeconds: 2
+          volumeMounts:
+            - name: traefik-config
+              mountPath: /etc/traefik/
+            - name: secret-volume
+              mountPath: /certs/
+      volumes:
+        - name: traefik-config
+          configMap:
+            name: traefik-configmap
+        - name: secret-volume
+          secret:
+            secretName: internal-ingress-cert

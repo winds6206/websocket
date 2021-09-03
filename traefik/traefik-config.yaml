@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-configmap
+  namespace: default
+data:
+  traefik.toml: |
+
+    [entryPoints]
+    #  [entryPoints.web]
+    #    address = ":80"
+
+      [entryPoints.websecure]
+        address = ":443"
+        [entryPoints.websecure.forwardedHeaders]
+          insecure = true
+
+    [log]
+      level = "INFO"
+
+    [api]
+      dashboard = true
+      insecure = true
+
+    [ping]
+      entryPoint = "traefik"
+
+    [providers]
+      [providers.file]
+        filename = "/etc/traefik/dynamic_conf.toml"
+
+  dynamic_conf.toml: |
+
+    [tls.stores]
+      [tls.stores.default]
+        [tls.stores.default.defaultCertificate]
+          certFile = "/certs/tls.crt"
+          keyFile  = "/certs/tls.key"
+
+    [http.routers]
+      [http.routers.router2]
+        rule = "Host(`127.0.0.1`) && PathPrefix(`/`)"
+        entryPoints = ["websecure"]
+        service = "ws"
+        priority = 2
+          [http.routers.router2.tls]
+
+    [http.services]
+      [http.services.ws.loadBalancer]
+        [[http.services.ws.loadBalancer.servers]]
+          url = "http://websocket"
