@@ -39,7 +39,7 @@ data:
 
     [http.routers]
       [http.routers.router2]
-        rule = "Host(`127.0.0.1`) && PathPrefix(`/`)"
+        rule = "Host(`websocket.tonyjhang.tk`) && PathPrefix(`/echo`)"
         entryPoints = ["websecure"]
         service = "ws"
         priority = 2
@@ -48,4 +48,4 @@ data:
     [http.services]
       [http.services.ws.loadBalancer]
         [[http.services.ws.loadBalancer.servers]]
-          url = "http://websocket"
+          url = "http://websocket/echo"
