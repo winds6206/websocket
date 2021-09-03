@@ -1,5 +1,5 @@
 FROM golang:1.17.0-alpine
-COPY ./server/* /go/src/websocket
+COPY ./server/* /go/src/websocket/
 
 WORKDIR /go/src/websocket
 
