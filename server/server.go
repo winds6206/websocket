@@ -12,7 +12,7 @@ func main() {
 		//如果有 cross domain 的需求，可加入這個，不檢查 cross domain
 		CheckOrigin: func(r *http.Request) bool { return true },
 	}
-	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/echo/echo2", func(w http.ResponseWriter, r *http.Request) {
 		c, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
 			log.Println("upgrade:", err)

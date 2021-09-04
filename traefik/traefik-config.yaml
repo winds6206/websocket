@@ -15,6 +15,8 @@ data:
         [entryPoints.websecure.forwardedHeaders]
           insecure = true
 
+    [accessLog]
+
     [log]
       level = "INFO"
 
@@ -41,11 +43,11 @@ data:
       [http.routers.router2]
         rule = "Host(`websocket.tonyjhang.tk`) && PathPrefix(`/echo`)"
         entryPoints = ["websecure"]
-        service = "ws"
+        service = "websocket"
         priority = 2
           [http.routers.router2.tls]
 
     [http.services]
-      [http.services.ws.loadBalancer]
-        [[http.services.ws.loadBalancer.servers]]
-          url = "http://websocket/echo"
+      [http.services.websocket.loadBalancer]
+        [[http.services.websocket.loadBalancer.servers]]
+          url = "http://websocket"
