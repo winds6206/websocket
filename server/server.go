@@ -19,6 +19,8 @@ func main() {
 	})
 
 	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("connected"))
+		w.WriteHeader(http.StatusOK)
 		c, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
 			log.Println("upgrade:", err)
