@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: websocket
+  namespace: develop
   labels:
     app: websocket
     repo: websocket
@@ -22,7 +23,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: websocket
-  namespace: default
+  namespace: develop
   labels:
     app: websocket
     repo: websocket
@@ -49,6 +50,6 @@ spec:
       restartPolicy: Always
       containers:
       - name: websocket
-        image: registry.tonyjhang.tk:5000/tony_jhang/websocket-master:latest
+        image: mayday6206/websocket-master:latest
         imagePullPolicy: Always
         command: ["./server"]

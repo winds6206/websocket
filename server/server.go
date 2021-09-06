@@ -12,6 +12,12 @@ func main() {
 		//如果有 cross domain 的需求，可加入這個，不檢查 cross domain
 		CheckOrigin: func(r *http.Request) bool { return true },
 	}
+
+  http.HandleFunc("/healthz", func (w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("200 OK"))
+    w.WriteHeader(http.StatusOK)
+	}
+
 	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
 		c, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
@@ -36,6 +42,7 @@ func main() {
 			}
 		}
 	})
+	
 	log.Println("server start at :8899")
 	log.Fatal(http.ListenAndServe(":8899", nil))
 }
