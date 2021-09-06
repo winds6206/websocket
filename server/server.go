@@ -16,7 +16,7 @@ func main() {
   http.HandleFunc("/healthz", func (w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("200 OK"))
     w.WriteHeader(http.StatusOK)
-	}
+	})
 
 	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
 		c, err := upgrader.Upgrade(w, r, nil)
@@ -42,7 +42,7 @@ func main() {
 			}
 		}
 	})
-	
+
 	log.Println("server start at :8899")
 	log.Fatal(http.ListenAndServe(":8899", nil))
 }
