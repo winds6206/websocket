@@ -29,7 +29,7 @@ func main() {
 			log.Println("disconnect !!")
 			c.Close()
 		}()
-	  fmt.println("connected")
+		log.Println("connected")
 		for {
 			mtype, msg, err := c.ReadMessage()
 			if err != nil {
