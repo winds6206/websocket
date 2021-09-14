@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-	"fmt"
 
 	"github.com/gorilla/websocket"
 )
@@ -29,7 +28,6 @@ func main() {
 			log.Println("disconnect !!")
 			c.Close()
 		}()
-		log.Println("connected")
 		for {
 			mtype, msg, err := c.ReadMessage()
 			if err != nil {
