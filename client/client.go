@@ -8,7 +8,7 @@ import (
 
 func main() {
 
-	c, _, err := websocket.DefaultDialer.Dial("ws://127.0.0.1:8899/echo", nil)
+	c, _, err := websocket.DefaultDialer.Dial("ws://127.0.0.1:9527/echo", nil)
 	if err != nil {
 		log.Fatal("dial:", err)
 	}

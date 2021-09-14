@@ -40,12 +40,12 @@ data:
           keyFile  = "/certs/tls.key"
 
     [http.routers]
-      [http.routers.router2]
+      [http.routers.router1]
         rule = "Host(`websocket.tonyjhang.tk`) && PathPrefix(`/echo`)"
         entryPoints = ["websecure"]
         service = "websocket"
         priority = 2
-          [http.routers.router2.tls]
+          [http.routers.router1.tls]
 
     [http.services]
       [http.services.websocket.loadBalancer]
